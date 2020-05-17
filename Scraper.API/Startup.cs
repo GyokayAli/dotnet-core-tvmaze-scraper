@@ -54,6 +54,11 @@ namespace Scraper.API
             })
               .AddPolicyHandler(PolicyProvider.WaitAndRetry());
 
+            services.AddOpenApiDocument(config =>
+            {
+                config.Title = "Scraper API";
+            });
+
             services.AddHostedService<ScrapingBackgroundService>();
         }
 
@@ -64,6 +69,10 @@ namespace Scraper.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // Register the Swagger generator and the Swagger UI middlewares
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseMvc();
         }

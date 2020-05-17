@@ -36,7 +36,7 @@ namespace Scraper.API.Controllers
         /// <param name="ct">The cancellation token</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<ICollection<ShowDto>>> Shows(int page = 0, int pageSize = 25, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<ActionResult<ICollection<ShowDto>>> Get(int page = 0, int pageSize = 25, CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
