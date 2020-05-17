@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Scraper.Api.Helpers;
+using Scraper.API.Helpers;
 using Scraper.Data;
 using Scraper.Repositories;
 using Scraper.Repositories.IRepositories;

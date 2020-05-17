@@ -5,13 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Scraper.Api.Models;
+using Scraper.API.Models;
 using Scraper.Services.IServices;
 using Scraper.Data.Entities;
 using System;
 using System.Net;
 
-namespace Scraper.Api.Controllers
+namespace Scraper.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

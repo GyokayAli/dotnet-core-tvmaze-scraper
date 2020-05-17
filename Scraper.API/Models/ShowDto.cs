@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Scraper.Api.Models
+namespace Scraper.API.Models
 {
     public class ShowDto
     {

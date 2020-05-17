@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Scraper.Api.Models
+namespace Scraper.API.Models
 {
     public class PersonDto
     {

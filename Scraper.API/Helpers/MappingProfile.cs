@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Scraper.Api.Models;
+using Scraper.API.Models;
 using Scraper.Data.Entities;
 using System.Linq;
 
-namespace Scraper.Api.Helpers
+namespace Scraper.API.Helpers
 {
     public class MappingProfile : Profile
     {
