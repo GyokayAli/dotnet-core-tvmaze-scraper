@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Scraper.Common\Scraper.Common.csproj" />
     <ProjectReference Include="..\Scraper.Data\Scraper.Data.csproj" />
   </ItemGroup>
 
