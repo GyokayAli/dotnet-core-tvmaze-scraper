@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Scraper.API.Helpers;
+using Scraper.API.Middleware;
 using Scraper.Data;
 using Scraper.Repositories;
 using Scraper.Repositories.IRepositories;
@@ -65,9 +66,11 @@ namespace Scraper.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
             }
 
             // Register the Swagger generator and the Swagger UI middlewares

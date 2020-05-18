@@ -72,9 +72,7 @@ namespace Scraper.Repositories
                 catch (Exception ex)
                 {
                     string message = $"Something went wrong while trying to store Show {show.Id}.";
-
                     _logger.LogError(ex, message);
-                    throw new Exception(message, ex);
                 }
             }
         }
@@ -104,9 +102,8 @@ namespace Scraper.Repositories
             catch (Exception ex)
             {
                 string message = $"Something went wrong while trying to store Show {show.Id}.";
-
                 _logger.LogError(ex, message);
-                throw new Exception(message, ex);
+                throw ex;
             }
         }
 
@@ -134,9 +131,8 @@ namespace Scraper.Repositories
             catch (Exception ex)
             {
                 string message = $"Something went wrong while tring to store Person ({person.Id}).";
-
                 _logger.LogError(ex, message);
-                throw new Exception(message, ex);
+                throw ex;
             }
         }
 
@@ -188,9 +184,7 @@ namespace Scraper.Repositories
             catch (Exception ex)
             {
                 string message = $"Something went wrong while tring to update the Person ({person.Id}) - Show ({show.Id}) relation.";
-
                 _logger.LogError(ex, message);
-                throw new Exception(message, ex);
             }
         }
     }

@@ -9,7 +9,6 @@ using Scraper.API.Models;
 using Scraper.Services.IServices;
 using Scraper.Data.Entities;
 using System;
-using System.Net;
 
 namespace Scraper.API.Controllers
 {
@@ -31,8 +30,8 @@ namespace Scraper.API.Controllers
         /// <summary>
         /// Gets paginated shows
         /// </summary>
-        /// <param name="page">The page number</param>
-        /// <param name="pageSize">The number of items to return per page. Default = 25 Max = 100</param>
+        /// <param name="page">The page number. First page = 0</param>
+        /// <param name="pageSize">The number of items to return per page. Default = 25, Max = 100</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns></returns>
         [HttpGet]
@@ -42,7 +41,7 @@ namespace Scraper.API.Controllers
             {
                 // Prevent some odd numbers and set default
                 if (page < 0) page = 0;
-                if (pageSize < 0 || pageSize > 100) page = 25;
+                if (pageSize < 1 || pageSize > 100) pageSize = 25;
 
                 var shows = await _showService.GetShows(page, pageSize, cancellationToken);
                 var mappedShows = _mapper.Map<ICollection<Show>, List<ShowDto>>(shows);
@@ -54,15 +53,9 @@ namespace Scraper.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unexpected error");
-                return StatusCode((int)HttpStatusCode.InternalServerError, "Internal server error while trying to get the shows.");
+                _logger.LogError(ex, "Could not read Shows from storage.");
+                throw new Exception("Internal server error while trying to get the Shows.");
             }
-        }
-
-        [HttpGet("test")]
-        public async Task<ActionResult> TestCD()
-        {
-            return Ok();
         }
     }
 }
