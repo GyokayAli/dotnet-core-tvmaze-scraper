@@ -11,7 +11,7 @@ ASP.NET Core Web API to serve shows/cast data. Includes a background scraper to 
 * NSwag
 
 ### API
-* Check it out using [Swagger](https://scraperapiappservice.azurewebsites.net/swagger) - /swagger
+* Check it out using [Swagger](https://scraperapiappservice.azurewebsites.net/swagger) => /swagger
 * GET paginated result of shows including the cast => `/api/shows`
 * Pagination default values: `page = 0`, `pageSize = 25` and maximum `pageSize = 100` => `/api/shows?page=1&pageSize=50`
 
