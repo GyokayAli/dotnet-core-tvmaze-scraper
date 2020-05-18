@@ -41,7 +41,7 @@ namespace Scraper.Services
                 {
                     var response = await _httpClient.GetAsync(string.Format(EndpointShows, i));
 
-                    // StatusCode of NotFound expected after the last page available
+                    // StatusCode of NotFound expected after exceeding the last page available
                     if (response.StatusCode == HttpStatusCode.NotFound)
                     {
                         break;
@@ -50,22 +50,22 @@ namespace Scraper.Services
                     // Read shows from the response
                     var currentShows = await response.Content.ReadAsAsync<ICollection<TVmazeShow>>();
 
-                    // Scrape cast members for each show
-                    foreach (var show in currentShows)
+                    if (currentShows != null)
                     {
-                        show.Cast = await ScrapeCast(show.Id);
-                    }
+                        // Scrape cast members for each show
+                        foreach (var show in currentShows)
+                        {
+                            show.Cast = await ScrapeCast(show.Id);
+                        }
 
-                    // Store scraped data from the current page
-                    if (currentShows.Count > 0)
+                        // Store scraped data from the current page
                         await _showRepository.StoreShows(currentShows);
+                    }
                 }
                 catch (Exception ex)
                 {
                     string message = $"Failed to scrape shows from page {startPage}";
-
                     _logger.LogError(ex, message);
-                    throw new Exception(message, ex);
                 }
             }
         }
@@ -78,9 +78,10 @@ namespace Scraper.Services
         private async Task<ICollection<TVmazePerson>> ScrapeCast(int showId)
         {
             var response = await _httpClient.GetAsync(string.Format(EndpointCast, showId));
-            response.EnsureSuccessStatusCode(); // TODO: double check
-            
-            // Read cast from the response
+
+            if (response.StatusCode == HttpStatusCode.NotFound) return default;
+
+            // Read Cast from the response
             var result = await response.Content.ReadAsAsync<ICollection<TVmazeCast>>();
 
             return result.Select(x => x.Person).ToList();

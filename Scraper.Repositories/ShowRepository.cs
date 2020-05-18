@@ -65,13 +65,9 @@ namespace Scraper.Repositories
                     if (!storedShow)
                     {
                         var newShow = await AddShowAsync(show);
-                        await StoreCastAsync(newShow, show.Cast);
+                        if (show.Cast != null)
+                            await StoreCastAsync(newShow, show.Cast);
                     }
-                }
-                catch (InvalidOperationException ex)
-                {
-                    // TODO
-                    _logger.LogError(ex, $"Update exception happened whilst Show {show.Id} update.");
                 }
                 catch (Exception ex)
                 {
