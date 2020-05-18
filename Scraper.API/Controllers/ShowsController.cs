@@ -33,7 +33,7 @@ namespace Scraper.API.Controllers
         /// </summary>
         /// <param name="page">The page number</param>
         /// <param name="pageSize">The number of items to return per page. Default = 25 Max = 100</param>
-        /// <param name="ct">The cancellation token</param>
+        /// <param name="cancellationToken">The cancellation token</param>
         /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<ICollection<ShowDto>>> Get(int page = 0, int pageSize = 25, CancellationToken cancellationToken = default(CancellationToken))
@@ -57,6 +57,12 @@ namespace Scraper.API.Controllers
                 _logger.LogError(ex, "Unexpected error");
                 return StatusCode((int)HttpStatusCode.InternalServerError, "Internal server error while trying to get the shows.");
             }
+        }
+
+        [HttpGet("test")]
+        public async Task<ActionResult> TestCD()
+        {
+            return Ok();
         }
     }
 }
