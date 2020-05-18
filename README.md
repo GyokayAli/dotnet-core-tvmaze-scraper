@@ -19,3 +19,7 @@ ASP.NET Core Web API to serve shows/cast data. Includes a background scraper to 
 * Executed immediately on startup.
 * After the first run, scheduled to be executed every day at midnight.
 * Continues running from the last page where left off using the last available show id in the storage.
+
+#### Start using
+* Update `DefaultConnection` in `appsettings.json`
+* Apply migrations => `dotnet ef database update`
