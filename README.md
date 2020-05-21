@@ -7,6 +7,7 @@ ASP.NET Core Web API to serve shows/cast data. Includes a background scraper to 
 * .NET Core 2.2
 * MS SQL Server
 * Entity Framework Core
+* [EFCore.BulkExtensions](https://github.com/borisdj/EFCore.BulkExtensions)
 * AutoMapper
 * NSwag
 
