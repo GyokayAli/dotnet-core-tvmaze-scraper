@@ -10,6 +10,8 @@ using Scraper.Repositories.IRepositories;
 using Scraper.Data.Entities;
 using Scraper.Common.TVmaze;
 using Scraper.Common;
+using EFCore.BulkExtensions;
+using AutoMapper;
 
 namespace Scraper.Repositories
 {
@@ -17,11 +19,13 @@ namespace Scraper.Repositories
     {
         private readonly ILogger<ShowRepository> _logger;
         private readonly ApplicationDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public ShowRepository(ILogger<ShowRepository> logger, ApplicationDbContext dbContext)
+        public ShowRepository(ILogger<ShowRepository> logger, ApplicationDbContext dbContext, IMapper mapper)
         {
             _logger = logger;
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -72,8 +76,6 @@ namespace Scraper.Repositories
                             List<TVmazePerson> uniqueCast = show.Cast.Distinct(new PersonEqualityComparer()).ToList();
                             await StoreCastAsync(newShow, uniqueCast);
                         }
-                        // Save all changes for the Show including Cast
-                        await _dbContext.SaveChangesAsync();
                     }
                 }
                 catch (Exception ex)
@@ -103,6 +105,7 @@ namespace Scraper.Repositories
                 };
 
                 await _dbContext.Shows.AddAsync(newShow);
+                await _dbContext.SaveChangesAsync();
 
                 return newShow;
             }
@@ -114,81 +117,54 @@ namespace Scraper.Repositories
         }
 
         /// <summary>
-        /// Saves the Person in the storage
-        /// </summary>
-        /// <param name="person">The Person to be stored</param>
-        /// <returns></returns>
-        private async Task<Person> AddPersonAsync(TVmazePerson person)
-        {
-            try
-            {
-                var newPerson = new Person()
-                {
-                    Id = person.Id,
-                    Name = person.Name,
-                    Birthday = person?.Birthday
-                };
-
-                await _dbContext.People.AddAsync(newPerson);
-
-                return newPerson;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Something went wrong while tring to store Person ({person.Id}).");
-                throw;
-            }
-        }
-
-        /// <summary>
         /// Stores the Cast of a Show in the storage
         /// </summary>
         /// <param name="show">The Show entity</param>
         /// <param name="cast">The collection of Cast</param>
         /// <returns></returns>
-        private async Task StoreCastAsync(Show show, ICollection<TVmazePerson> cast)
+        private async Task StoreCastAsync(Show show, List<TVmazePerson> cast)
         {
-            foreach (var person in cast)
+            try
             {
-                var storedPerson = await _dbContext.People.FirstOrDefaultAsync(x => x.Id == person.Id);
-                if (storedPerson == null)
-                {
-                    var newPerson = await AddPersonAsync(person);
-                    await HandleEntityRelations(newPerson, show);
-                }
-                // check if there is already a relation between show and person
-                else if (!_dbContext.PeopleShows.Any(x => x.ShowId == show.Id && x.PersonId == storedPerson.Id))
-                {
-                    await HandleEntityRelations(storedPerson, show);
-                }
+                // Make cast data ready for upsert
+                var normalizedCast = _mapper.Map<List<TVmazePerson>, List<Person>>(cast);
+                // Bulk upsert
+                await _dbContext.BulkInsertOrUpdateAsync<Person>(normalizedCast);
+
+                await HandleEntityRelations(show, normalizedCast);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Something went wrong while trying to store the cast for Show ({show.Id}).");
             }
         }
 
         /// <summary>
         /// Stores the relationship between a Show and Cast member
         /// </summary>
-        /// <param name="person">The Person entity</param>
         /// <param name="show">The Show entity</param>
+        /// <param name="cast">The collection of cast for Show</param>
         /// <returns></returns>
-        private async Task HandleEntityRelations(Person person, Show show)
+        private async Task HandleEntityRelations(Show show, List<Person> cast)
         {
             try
             {
-                var relation = new PersonShow()
+                //Make show/ cast relations data ready for upsert
+                var normalizedRelations = cast.Select(x => new PersonShow
                 {
-                    Person = person,
-                    PersonId = person.Id,
+                    Person = x,
+                    PersonId = x.Id,
                     Show = show,
                     ShowId = show.Id
-                };
-
-                await _dbContext.PeopleShows.AddAsync(relation);
+                }).ToList();
+                // Bulk upsert
+                await _dbContext.BulkInsertOrUpdateAsync<PersonShow>(normalizedRelations);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Something went wrong while tring to update the Person ({person.Id}) - Show ({show.Id}) relation.");
+                _logger.LogError(ex, $"Something went wrong while trying to store the Show/Cast relation - Show ({show.Id}).");
             }
-        }   
+        }
         #endregion
     }
 }

@@ -10,11 +10,13 @@ using Scraper.API.Helpers;
 using Scraper.API.Middleware;
 using Scraper.Data;
 using Scraper.Repositories;
+using Scraper.Repositories.Helpers;
 using Scraper.Repositories.IRepositories;
 using Scraper.Services;
 using Scraper.Services.BackgroundServices;
 using Scraper.Services.IServices;
 using System;
+using System.Reflection;
 
 namespace Scraper.API
 {
@@ -43,7 +45,7 @@ namespace Scraper.API
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddAutoMapper(typeof(MappingProfile));
+            services.AddAutoMapper(new Type[] { typeof(ApiMappingProfile), typeof(RepoMappingProfile) });
 
             services.AddScoped<IShowRepository, ShowRepository>();
             services.AddScoped<IShowService, ShowService>();

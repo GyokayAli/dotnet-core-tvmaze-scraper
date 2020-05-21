@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Scraper.API.Helpers
 {
-    public class MappingProfile : Profile
+    public class ApiMappingProfile : Profile
     {
-        public MappingProfile()
+        public ApiMappingProfile()
         {
             CreateMap<Show, ShowDto>()
                 .ForMember(dest => dest.Cast,
