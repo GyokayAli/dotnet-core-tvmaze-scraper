@@ -13,7 +13,7 @@ namespace Scraper.Services
 {
     public class ScraperService : IScraperService
     {
-        private const int MaxPage = 1000; // Assuming there won't be more than 1K pages of shows in the VMmaze API (192 as of now)
+        private const int MaxPage = 1000; // Assuming there won't be more than 1K pages of shows in the TVmaze API (192 as of now)
         private const string EndpointShows = "/shows?page={0}";
         private const string EndpointCast = "/shows/{0}/cast";
 
@@ -74,7 +74,7 @@ namespace Scraper.Services
         /// </summary>
         /// <param name="showId">The show id</param>
         /// <returns></returns>
-        private async Task<ICollection<TVmazePerson>> ScrapeCast(int showId)
+        public async Task<ICollection<TVmazePerson>> ScrapeCast(int showId)
         {
             var response = await _httpClient.GetAsync(string.Format(EndpointCast, showId));
 

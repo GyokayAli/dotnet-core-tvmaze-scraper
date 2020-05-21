@@ -9,6 +9,7 @@ using Scraper.Data;
 using Scraper.Repositories.IRepositories;
 using Scraper.Data.Entities;
 using Scraper.Common.TVmaze;
+using Scraper.Common;
 
 namespace Scraper.Repositories
 {
@@ -82,18 +83,7 @@ namespace Scraper.Repositories
             }
         }
 
-        private class PersonEqualityComparer : IEqualityComparer<TVmazePerson>
-        {
-            public bool Equals(TVmazePerson x, TVmazePerson y)
-            {
-                return x.Id == y.Id;
-            }
-
-            public int GetHashCode(TVmazePerson obj)
-            {
-                return obj.Id;
-            }
-        }
+        #region "Helpers"
 
         /// <summary>
         /// Saves the Show in the storage
@@ -198,6 +188,7 @@ namespace Scraper.Repositories
             {
                 _logger.LogError(ex, $"Something went wrong while tring to update the Person ({person.Id}) - Show ({show.Id}) relation.");
             }
-        }
+        }   
+        #endregion
     }
 }
