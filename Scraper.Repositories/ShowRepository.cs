@@ -66,14 +66,32 @@ namespace Scraper.Repositories
                     {
                         var newShow = await AddShowAsync(show);
                         if (show.Cast != null)
-                            await StoreCastAsync(newShow, show.Cast);
+                        {
+                            // Get rid off duplicate actors
+                            List<TVmazePerson> uniqueCast = show.Cast.Distinct(new PersonEqualityComparer()).ToList();
+                            await StoreCastAsync(newShow, uniqueCast);
+                        }
+                        // Save all changes for the Show including Cast
+                        await _dbContext.SaveChangesAsync();
                     }
                 }
                 catch (Exception ex)
                 {
-                    string message = $"Something went wrong while trying to store Show {show.Id}.";
-                    _logger.LogError(ex, message);
+                    _logger.LogError(ex, $"Something went wrong while trying to store Show {show.Id}.");
                 }
+            }
+        }
+
+        private class PersonEqualityComparer : IEqualityComparer<TVmazePerson>
+        {
+            public bool Equals(TVmazePerson x, TVmazePerson y)
+            {
+                return x.Id == y.Id;
+            }
+
+            public int GetHashCode(TVmazePerson obj)
+            {
+                return obj.Id;
             }
         }
 
@@ -95,15 +113,13 @@ namespace Scraper.Repositories
                 };
 
                 await _dbContext.Shows.AddAsync(newShow);
-                await _dbContext.SaveChangesAsync();
 
                 return newShow;
             }
             catch (Exception ex)
             {
-                string message = $"Something went wrong while trying to store Show {show.Id}.";
-                _logger.LogError(ex, message);
-                throw ex;
+                _logger.LogError(ex, $"Something went wrong while trying to store Show {show.Id}.");
+                throw;
             }
         }
 
@@ -124,15 +140,13 @@ namespace Scraper.Repositories
                 };
 
                 await _dbContext.People.AddAsync(newPerson);
-                await _dbContext.SaveChangesAsync();
 
                 return newPerson;
             }
             catch (Exception ex)
             {
-                string message = $"Something went wrong while tring to store Person ({person.Id}).";
-                _logger.LogError(ex, message);
-                throw ex;
+                _logger.LogError(ex, $"Something went wrong while tring to store Person ({person.Id}).");
+                throw;
             }
         }
 
@@ -179,12 +193,10 @@ namespace Scraper.Repositories
                 };
 
                 await _dbContext.PeopleShows.AddAsync(relation);
-                await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                string message = $"Something went wrong while tring to update the Person ({person.Id}) - Show ({show.Id}) relation.";
-                _logger.LogError(ex, message);
+                _logger.LogError(ex, $"Something went wrong while tring to update the Person ({person.Id}) - Show ({show.Id}) relation.");
             }
         }
     }

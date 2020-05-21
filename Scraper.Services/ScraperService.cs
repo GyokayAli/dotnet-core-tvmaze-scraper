@@ -64,8 +64,7 @@ namespace Scraper.Services
                 }
                 catch (Exception ex)
                 {
-                    string message = $"Failed to scrape shows from page {startPage}";
-                    _logger.LogError(ex, message);
+                    _logger.LogError(ex, $"Failed to scrape shows from page {startPage}");
                 }
             }
         }
