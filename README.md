@@ -1,7 +1,9 @@
 # Scraper API
 ASP.NET Core Web API to serve shows/cast data. Includes a background scraper to retrieve the necessary data from [TVmaze API](http://www.tvmaze.com/api) and persists in own data storage.
 
-* Check it out: https://scraperapiappservice.azurewebsites.net/swagger
+[![Build Status](https://dev.azure.com/gyokaymetinali/ScraperAPI/_apis/build/status/GyokayAli.dotnet-core-tvmaze-scraper?branchName=master)](https://dev.azure.com/gyokaymetinali/ScraperAPI/_build/latest?definitionId=2&branchName=master)
+
+Check it out: https://scraperapiappservice.azurewebsites.net/swagger
 
 ### Technical stuff
 * .NET Core 2.2
