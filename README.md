@@ -3,8 +3,6 @@ ASP.NET Core Web API to serve shows/cast data. Includes a background scraper to 
 
 [![Build Status](https://dev.azure.com/gyokaymetinali/ScraperAPI/_apis/build/status/GyokayAli.dotnet-core-tvmaze-scraper?branchName=master)](https://dev.azure.com/gyokaymetinali/ScraperAPI/_build/latest?definitionId=2&branchName=master)
 
-Check it out: https://scraperapiappservice.azurewebsites.net/swagger
-
 ### Technical stuff
 * .NET Core 2.2
 * MS SQL Server
@@ -14,7 +12,6 @@ Check it out: https://scraperapiappservice.azurewebsites.net/swagger
 * NSwag
 
 ### API
-* [Swagger](https://scraperapiappservice.azurewebsites.net/swagger) => `/swagger`
 * GET paginated result of shows including the cast => `/api/shows`
 * Pagination default values: `page = 0`, `pageSize = 25` and maximum `pageSize = 100` => `/api/shows?page=1&pageSize=50`
 
